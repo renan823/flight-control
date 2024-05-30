@@ -1,33 +1,40 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-struct Airplane {
-    capacity: int;
-    executive: double;
-    economic: double;
+/*
+
+*/
+struct Aviao {
+    capacidade: int;
+    executiva: double;
+    economica: double;
 }
 
-struct Flight {
+struct Voo {
     id: char[4];
-    date: char[10];
-    from: char[4];
-    to: char[4];
+    data: char[10];
+    localPartida: char[4];
+    localChegada: char[4];
 }
 
-struct Person {
-    name: *char;
-    lastname: *char;
+struct Pessoa {
+    nome: *char;
+    sobrenome: *char;
     cpf: char[14];
 }
 
-struct Reservation {
-    personCpf: char[14];
-    flightId: char[4];
-    seat: char[4];
-    class: *char;
-    value: double;
+struct Reserva {
+    cpfPessoa: char[14];
+    idVoo: char[4];
+    assento: char[4];
+    classe: *char;
+    valor: double;
 }
 
 int main (void) {
+
+    
+
     return (0);
 }

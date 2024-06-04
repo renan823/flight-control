@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define TAM_MAX_NOME 100
+#define TAM_MAX_STRING 100
 
 /*-----------------------------------------------------------------------------------
 Declaração dos tipos usados no programa.
@@ -11,8 +11,8 @@ O tipo 'reserva' relaciona os tipos 'voo' e 'pessoa'.
 -----------------------------------------------------------------------------------*/
 typedef struct {
     int capacidade;
-    double executiva;
-    double economica;
+    float executiva;
+    float economica;
 } Aviao;
 
 typedef struct Voo {
@@ -33,7 +33,7 @@ typedef struct {
     Voo voo;
     char assento[5];
     char classe[10];
-    double valor;
+    float valor;
 } Reserva;
 
 /*-----------------------------------------------------------------------------------
@@ -133,17 +133,61 @@ void linha () {
     printf("--------------------------------------------------\n");
 }
 
+/*
+Permite a leitura de uma string.
+O tamanho máximo da string é passado por parâmetro.
+Inicializado com tamanho máximo, o ponteiro para char recebe a
+entrada do usuário.
+Em seguida, é removido o caracter '\n' (se existir).
+Então, o ponteiro passa por uma realocação de memória,
+ocupando apenas o espaço necessário para acomodar a string.
+Se a realocação não for bem sucedida, um erro é mostrado.
+Senão, a string é retornada.
+*/
+char *lerString (int tamanho) {
+    char *string = (char *) alocar(tamanho, sizeof(char));
+
+    scanf("%s", string);
+
+    //trocar \n por \0
+    if (string[strlen(string) - 1] == '\n') {
+        string[strlen(string) - 1] = '\0';
+    }
+
+    //redimensionar
+    if ((string = (char *) realloc(string, strlen(string) * sizeof(char))) == NULL) {
+        printf("Erro: sem memória para alocar\n");
+    }
+
+    return (string);
+}
+
+/*
+Permite a leitura de datas.
+O tamanho 11 acomoda a data e '\0' no final.
+O programa recebe como entrada do usuário dia, mês e ano.
+A entrada é processada de modo a formatar a data como
+dd/mm/YYYY.
+A data formatada é retornada.
+*/
+char *lerData () {
+    char *data = (char *) alocar(11, sizeof(char));
+
+    fgets(data, 11, stdin); //Não tá funcionando!!!!
+
+    for (int i = 0; i < strlen(data); i++) {
+        if (data[i] == ' ') {
+            data[i] = '/';
+        }
+    }
+
+    return (data);
+}
+
 /*-----------------------------------------------------------------------------------
 Funções usadas para acessar e manipular os dados. 
 Descrição específica em cada função.
 -----------------------------------------------------------------------------------*/
-
-/*
-
-*/
-void aberturaVoo (Aviao *aviao) {
-    scanf("%d %lf %lf", &aviao->capacidade, &aviao->economica, &aviao->executiva);
-}
 
 /*
 Salva uma nova reserva no arquivo.
@@ -157,13 +201,13 @@ void adicionarReserva (Reserva reserva) {
 
     fprintf(reservas, "%s %s %s ", reserva.pessoa.nome, reserva.pessoa.sobrenome, reserva.pessoa.cpf);
     fprintf(reservas, "%s %s ", reserva.voo.data, reserva.voo.id);
-    fprintf(reservas, "%s %s %lf ", reserva.assento, reserva.classe, reserva.valor);
+    fprintf(reservas, "%s %s %f ", reserva.assento, reserva.classe, reserva.valor);
     fprintf(reservas, "%s %s\n", reserva.voo.localPartida, reserva.voo.localChegada);
 
     fclose(reservas);
 }
 
-void modificarReserva (char *nome, char *sobrenome, char cpf[14], char assento[3]) {
+void editarReserva (char *nome, char *sobrenome, char cpf[14], char assento[3]) {
     FILE *reservas = abrirArquivo("voos.txt", "w");
 
     fclose(reservas);
@@ -178,6 +222,36 @@ void consultarReserva (char cpf[15]) {
 
     
 }
+
+/*-----------------------------------------------------------------------------------
+Funções para entrada de dados (em cada caso descrito).
+Descrição específica em cada função.
+-----------------------------------------------------------------------------------*/
+
+/*
+
+*/
+void aberturaVoo (Aviao *aviao) {
+    scanf("%d %f %f", &aviao->capacidade, &aviao->economica, &aviao->executiva);
+}
+
+/*
+
+*/
+void realizarReserva () {
+    Pessoa p = { lerString(TAM_MAX_STRING), lerString(TAM_MAX_STRING), lerString(15) };
+    char *data = lerData(); 
+    printf("%s\n", data);
+
+}
+
+/*
+
+*/
+void modificarReserva () {
+
+}
+
 
 /*-----------------------------------------------------------------------------------
 Função principal.
@@ -200,6 +274,7 @@ int main (void) {
                 aberturaVoo(&aviao);
                 break;
             case 2:
+                realizarReserva();
                 break;
             case 3:
                 break;
